@@ -62,9 +62,13 @@ Running Eccentricity
 ```
 $ ./apps/eccentricity/kBFS-1Phase-Ecc /ssd0/graphs/bin/Epinions1_sym.bin -s -b -out Epinions.txt
 ```
+
 argv[1] is the input graph.
+
 -s indicate symmetric graph (should always be settled)
+
 -b indicate binary graph 
+
 -out Epinions.txt  indicate output file to recored eccentricity
 
 
