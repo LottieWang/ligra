@@ -471,11 +471,15 @@ void Compute(hypergraph<vertex>&, commandLine);
 
 int parallel_main(int argc, char* argv[]) {
   commandLine P(argc,argv," [-s] <inFile>");
-  char* iFile = P.getArgument(0);
-  bool symmetric = P.getOptionValue("-s");
-  bool compressed = P.getOptionValue("-c");
-  bool binary = P.getOptionValue("-b");
-  bool mmap = P.getOptionValue("-m");
+  // char* iFile = P.getArgument(0);
+	char* iFile = argv[1];
+  bool symmetric = P.getOption("-s");
+  bool compressed = P.getOption("-c");
+  bool binary = P.getOption("-b");
+  bool mmap = P.getOption("-m");
+	std::cout << "iFile = " << iFile << std::endl;
+	std::cout << "symmetric = " << symmetric << std::endl;
+	std::cout << "binary = " << binary << std::endl;
   //cout << "mmap = " << mmap << endl;
   long rounds = P.getOptionLongValue("-rounds",3);
   if (compressed) {
@@ -521,6 +525,7 @@ int parallel_main(int argc, char* argv[]) {
       hypergraph<symmetricVertex> G =
         readHypergraph<symmetricVertex>(iFile,compressed,symmetric,binary,mmap); //symmetric graph
 #endif
+			std::cout << "G.n = " << G.n << " G.m = " << G.m << std::endl;
       Compute(G,P);
       for(int r=0;r<rounds;r++) {
         startTime();

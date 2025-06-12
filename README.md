@@ -57,6 +57,18 @@ $ make clean #removes all executables
 $ make cleansrc #removes all executables and linked files from the ligra/ directory
 ```
 
+Running Eccentricity
+
+```
+$ ./apps/eccentricity/kBFS-1Phase-Ecc /ssd0/graphs/bin/Epinions1_sym.bin -s -b -out Epinions.txt
+```
+argv[1] is the input graph.
+-s indicate symmetric graph (should always be settled)
+-b indicate binary graph 
+-out Epinions.txt  indicate output file to recored eccentricity
+
+
+
 Running code in Ligra
 -------
 The applications take the input graph as input as well as an optional
@@ -64,8 +76,8 @@ flag "-s" to indicate a symmetric graph.  Symmetric graphs should be
 called with the "-s" flag for better performance. For example:
 
 ```
-$ ./BFS -s ../inputs/rMatGraph_J_5_100
-$ ./BellmanFord -s ../inputs/rMatGraph_WJ_5_100
+$ ./BFS ../inputs/rMatGraph_J_5_100 -s 
+$ ./BellmanFord ../inputs/rMatGraph_WJ_5_100 -s
 ``` 
 
 For BFS, BC and BellmanFord, one can also pass the "-r" flag followed

@@ -109,6 +109,9 @@ void Compute(graph<vertex>& GA, commandLine P) {
   t3.start();
   long length = P.getOptionLongValue("-r",0); //number of words per vertex
   char* oFile = P.getOptionValue("-out"); //file to write eccentricites
+	if (oFile != NULL) {
+  	std::cout << "output file = " << oFile << std::endl;
+	}
   srand (time(NULL));
   uintT seed = rand();
   cout << "seed = " << seed << endl;
@@ -230,6 +233,7 @@ void Compute(graph<vertex>& GA, commandLine P) {
   t0.stop(); t3.stop();
   reportAll();
   if(oFile != NULL) { //write eccentricities to file if desired
+    std::cout << "Writing eccentricities to file " << oFile<< std::endl;
     ofstream file (oFile, ios::out | ios::binary);
     stringstream ss;
     for(long i=0;i<GA.n;i++) ss << ecc[i] << endl;

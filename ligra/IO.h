@@ -472,6 +472,7 @@ graph<vertex> readGraphFromBinary(char* iFile, bool isSymmetric) {
 
 template <class vertex>
 graph<vertex> MyreadGraphFromBinary(char* iFile, bool isSymmetric) {
+    std::cout << "MyreadGraphFromBinary "<< std::endl;
 	// Uses mmap to accelerate reading
 	struct stat sb;
 	int fd = open(iFile, O_RDONLY);
@@ -488,29 +489,38 @@ graph<vertex> MyreadGraphFromBinary(char* iFile, bool isSymmetric) {
 	size_t len = sb.st_size;
 	uint64_t n = reinterpret_cast<uint64_t *>(data)[0];
 	uint64_t m = reinterpret_cast<uint64_t *>(data)[1];
+    std::cout << "n = "<<n<<" m = "<<m<<std::endl;
 	size_t sizes = reinterpret_cast<uint64_t *>(data)[2];
-  assert(sizes == (n + 1) * 8 + m * 4 + 3 * 8);
+    assert(sizes == (n + 1) * 8 + m * 4 + 3 * 8);
 
 	// std::vector<uint64_t> offsets = std::vector<uint64_t>::uninitialized(n+1);
-	// uint64_t * offsets = (uint64_t*) malloc(sizeof(uint64_t) * (n + 1));
 	uint64_t * offsets = newA(uint64_t, n+1);
 	uintE* edges = newA(uintE,m);
-	// uintE* edges = (uintE*) malloc(sizeof(uintE) * m);
-	// std::vector<uint32_t>	edges = std::vector<uint32_t>::uninitialized(m);
+    vertex* v = newA(vertex,n);
 
   // uintE* edges = (uintE*) s;
 
   // uintT* offsets = (uintT*) t;
 
-	{parallel_for(size_t i = 0; i < n + 1; i++) {
+	parallel_for(size_t i = 0; i < n + 1; i++) {
 		offsets[i] = reinterpret_cast<uint64_t *>(data + 3 * 8)[i];
-	}}
+	}
 
-	{parallel_for(size_t i = 0; i < m; i++) {
-		edges[i] = reinterpret_cast<uint32_t *>(data + 3*8+ (n + 1) * 8)[i];
-	}}
+	parallel_for(size_t i = 0; i < m; i++) {
+		edges[i] = reinterpret_cast<uintE *>(data + 3*8+ (n + 1) * 8)[i];
+	}
+//   std::cout << "offsets: ";
+//   for (int i = 0; i<100; i++){
+//     std::cout << offsets[i] << " ";
+//   }
+//   std::cout << std::endl;
+//   std::cout << "edges: ";
+//   for (int i = 0; i<100; i++){
+//     std::cout << edges[i] << " ";
+//   }
+//   std::cout << std::endl;
 
-  vertex* v = newA(vertex,n);
+  
 #ifdef WEIGHTED
   intE* edgesAndWeights = newA(intE,2*m);
   {parallel_for(long i=0;i<m;i++) {
