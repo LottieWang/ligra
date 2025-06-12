@@ -26,6 +26,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <cstdint>
 #include "parallel.h"
 using namespace std;
 
