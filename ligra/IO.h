@@ -32,6 +32,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cassert>
+#include <type_traits>
+#include <vector>
 #include "parallel.h"
 #include "blockRadixSort.h"
 #include "quickSort.h"
@@ -466,9 +469,80 @@ graph<vertex> readGraphFromBinary(char* iFile, bool isSymmetric) {
 #endif
 }
 
+
+template <class vertex>
+graph<vertex> MyreadGraphFromBinary(char* iFile, bool isSymmetric) {
+	// Uses mmap to accelerate reading
+	struct stat sb;
+	int fd = open(iFile, O_RDONLY);
+	if (fd == -1) {
+		std::cerr << "Error: Cannot open file " << iFile << std::endl;
+		abort();
+	}
+	if (fstat(fd, &sb) == -1) {
+		std::cerr << "Error: Unable to acquire file stat" << std::endl;
+		abort();
+	}
+	char *data =
+			static_cast<char *>(mmap(0, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0));
+	size_t len = sb.st_size;
+	uint64_t n = reinterpret_cast<uint64_t *>(data)[0];
+	uint64_t m = reinterpret_cast<uint64_t *>(data)[1];
+	size_t sizes = reinterpret_cast<uint64_t *>(data)[2];
+  assert(sizes == (n + 1) * 8 + m * 4 + 3 * 8);
+
+	// std::vector<uint64_t> offsets = std::vector<uint64_t>::uninitialized(n+1);
+	// uint64_t * offsets = (uint64_t*) malloc(sizeof(uint64_t) * (n + 1));
+	uint64_t * offsets = newA(uint64_t, n+1);
+	uintE* edges = newA(uintE,m);
+	// uintE* edges = (uintE*) malloc(sizeof(uintE) * m);
+	// std::vector<uint32_t>	edges = std::vector<uint32_t>::uninitialized(m);
+
+  // uintE* edges = (uintE*) s;
+
+  // uintT* offsets = (uintT*) t;
+
+	{parallel_for(size_t i = 0; i < n + 1; i++) {
+		offsets[i] = reinterpret_cast<uint64_t *>(data + 3 * 8)[i];
+	}}
+
+	{parallel_for(size_t i = 0; i < m; i++) {
+		edges[i] = reinterpret_cast<uint32_t *>(data + 3*8+ (n + 1) * 8)[i];
+	}}
+
+  vertex* v = newA(vertex,n);
+#ifdef WEIGHTED
+  intE* edgesAndWeights = newA(intE,2*m);
+  {parallel_for(long i=0;i<m;i++) {
+    edgesAndWeights[2*i] = edges[i];
+    edgesAndWeights[2*i+1] = edges[i+m];
+    }}
+  //free(edges);
+#endif
+  {parallel_for(long i=0;i<n;i++) {
+    uintT o = offsets[i];
+    // uintT l = offsets[i+1]-offsets[i];
+      v[i].setOutDegree(offsets[i+1] - offsets[i]);
+#ifndef WEIGHTED
+      v[i].setOutNeighbors(edges+o);
+#else
+      v[i].setOutNeighbors(edgesAndWeights+2*o);
+#endif
+    }}
+  free(offsets);
+#ifndef WEIGHTED
+  Uncompressed_Mem<vertex>* mem = new Uncompressed_Mem<vertex>(v,n,m,edges);
+  return graph<vertex>(v,n,m,mem);
+#else
+  Uncompressed_Mem<vertex>* mem = new Uncompressed_Mem<vertex>(v,n,m,edgesAndWeights);
+  return graph<vertex>(v,n,m,mem);
+#endif
+}
+
 template <class vertex>
 graph<vertex> readGraph(char* iFile, bool compressed, bool symmetric, bool binary, bool mmap) {
-  if(binary) return readGraphFromBinary<vertex>(iFile,symmetric);
+  // if(binary) return readGraphFromBinary<vertex>(iFile,symmetric);
+	if (binary) return MyreadGraphFromBinary<vertex>(iFile,symmetric);
   else return readGraphFromFile<vertex>(iFile,symmetric,mmap);
 }
 
