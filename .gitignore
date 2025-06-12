@@ -1,0 +1,12 @@
+# Ignore the .vscode directory completely
+.vscode/
+
+apps/*
+
+!apps/**.h
+
+# --- EXCEPTIONS ---
+# apps/eccentricity/*
+
+# !apps/eccentricity/*.h
+
