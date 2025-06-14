@@ -109,9 +109,6 @@ void Compute(graph<vertex>& GA, commandLine P) {
   t3.start();
   long length = P.getOptionLongValue("-r",0); //number of words per vertex
   char* oFile = P.getOptionValue("-out"); //file to write eccentricites
-	if (oFile != NULL) {
-  	std::cout << "output file = " << oFile << std::endl;
-	}
   srand (time(NULL));
   uintT seed = rand();
   cout << "seed = " << seed << endl;
@@ -189,7 +186,7 @@ void Compute(graph<vertex>& GA, commandLine P) {
 	  VisitedArray[v*myLength+j] = NextVisitedArray[v*myLength+j] = 0;
 	}}
       long sampleSize = min((long)CCsize,(long)64*myLength);
-
+			std::cout << "sampleSize = " << sampleSize << std::endl;
       uintE* starts2 = newA(uintE,sampleSize);
 
       //pick random vertices (could have duplicates)
