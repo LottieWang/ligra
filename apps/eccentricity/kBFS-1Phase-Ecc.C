@@ -186,7 +186,7 @@ void Compute(graph<vertex>& GA, commandLine P) {
 	  VisitedArray[v*myLength+j] = NextVisitedArray[v*myLength+j] = 0;
 	}}
       long sampleSize = min((long)CCsize,(long)64*myLength);
-			std::cout << "sampleSize = " << sampleSize << std::endl;
+			// std::cout << "sampleSize = " << sampleSize << std::endl;
       uintE* starts2 = newA(uintE,sampleSize);
 
       //pick random vertices (could have duplicates)
