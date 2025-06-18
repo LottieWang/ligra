@@ -98,7 +98,6 @@ void Compute(graph<vertex>& GA, commandLine P) {
   long* VisitedArray = newA(long,n*length);
   long* NextVisitedArray = newA(long,n*length);
   uintE* ecc = newA(uintE,n);
-
   for(long iter = 0; iter < numIters; iter++) {
     {parallel_for(long i=0;i<n*length;i++) 
 	VisitedArray[i] = NextVisitedArray[i] = 0;}
@@ -109,7 +108,6 @@ void Compute(graph<vertex>& GA, commandLine P) {
     long sampleSize = min(n-64*length*iter,(long)64*length);
 
     uintE* starts = newA(uintE,sampleSize);
-  
     {parallel_for(long i=0;i<sampleSize;i++) { //initial set of vertices
 	uintE v = 64*length*iter+i;
 	starts[i] = v;

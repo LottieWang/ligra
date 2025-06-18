@@ -109,7 +109,8 @@ void Compute(graph<vertex>& GA, commandLine P) {
   t3.start();
   long length = P.getOptionLongValue("-r",0); //number of words per vertex
   char* oFile = P.getOptionValue("-out"); //file to write eccentricites
-  srand (time(NULL));
+//   srand (time(NULL));
+  srand(1);
   uintT seed = rand();
   cout << "seed = " << seed << endl;
   t0.start();
@@ -166,6 +167,7 @@ void Compute(graph<vertex>& GA, commandLine P) {
   int* flags = newA(int,n);
   {parallel_for(long i=0;i<n;i++) flags[i] = -1;}
   uintE* starts = newA(uintE,n);
+  std::cout << "number of components = " << numCC << std::endl;
   t0.stop();
 
   t2.start();
@@ -177,6 +179,8 @@ void Compute(graph<vertex>& GA, commandLine P) {
       ecc[CCpairs[o].second] = ecc[CCpairs[o+1].second] = 1;
     } else if(CCsize > 1) { //size 1 CC's already have ecc of 0
       //do main computation
+    //   bool sorted_CC = is_sorted(CCpairs+o,CCpairs+o+CCsize);
+    //   std::cout << "sorted: " << sorted_CC << std::endl;
       long myLength = min((long)length,((long)CCsize+63)/64);
 
       //initialize bit vectors for component vertices
