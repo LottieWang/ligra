@@ -37,7 +37,7 @@ def test_Ecc(test, k, g, CURRENT_DIR, LOG_DIR, ECC_DIR):
 	ANS_DIR = f"{ECC_DIR}/kBFS_{test}"
 	os.makedirs(OUT_DIR, exist_ok=True)
 	os.makedirs(ANS_DIR, exist_ok=True)
-	cmd = f"numactl -i all {test_file} {GRAPH_DIR}/{g}.bin -s -b -out {ANS_DIR}/{g}_{k}.txt >> {OUT_DIR}/{g}_{k}.txt"
+	cmd = f"numactl -i all {test_file} {GRAPH_DIR}/{g}.bin -s -b -r {int(k/64)} -out {ANS_DIR}/{g}_{k}.txt >> {OUT_DIR}/{g}_{k}.txt"
 	subprocess.call(cmd, shell=True)
 
 def experiment():
@@ -57,6 +57,9 @@ def experiment():
 			print(f"----test on {test}----")	
 			for g in graphs:
 				test_Ecc(test, k, g, CURRENT_DIR, LOG_DIR, ECC_DIR)
+	# print(f"-------test on Exact-------")
+	# for g in graphs:
+	# 	test_Ecc("kBFS-Exact", 64, g, CURRENT_DIR, LOG_DIR, ECC_DIR)
 
 if __name__ == '__main__':
 	experiment()
