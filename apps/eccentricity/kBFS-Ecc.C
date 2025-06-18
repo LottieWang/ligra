@@ -111,7 +111,8 @@ void Compute(graph<vertex>& GA, commandLine P) {
   t5.start();
   long length = P.getOptionLongValue("-r",0); //number of words per vertex
   char* oFile = P.getOptionValue("-out"); //file to write eccentricites
-  srand (time(NULL));
+//   srand (time(NULL));
+  srand(1);
   uintT seed = rand();
   cout << "seed = " << seed << endl;
   t0.start();
