@@ -24,9 +24,9 @@ graphs = [
 "eu-2015-host_sym",
 "uk-2002_sym",
 "arabic_sym",
-"twitter_sym",
-"friendster_sym",
-"sd_arc_sym"
+# "twitter_sym",
+# "friendster_sym",
+# "sd_arc_sym"
 ]
 
 def test_Ecc(test, k, g, CURRENT_DIR, LOG_DIR, ECC_DIR):
@@ -47,7 +47,8 @@ def experiment():
 	#   LOG_DIR=f"/data/lwang323/MS_BFS/Ecc"
 	os.makedirs(LOG_DIR, exist_ok=True)
 	os.makedirs(ECC_DIR, exist_ok=True)
-	type_names = ["kBFS-1Phase-Ecc","kBFS-Ecc","kBFS-Exact", "RV","TK","LogLog-Ecc", "FM-Ecc", "CLRSTV"]
+	# type_names = ["kBFS-1Phase-Ecc","kBFS-Ecc","kBFS-Exact", "RV","TK","LogLog-Ecc", "FM-Ecc", "CLRSTV"]
+	type_names = ["kBFS-1Phase-Ecc","kBFS-Ecc"]
 	# batch_sizes = [64,128,256,512,1024]
 	batch_sizes = [64]
 	for k in batch_sizes:

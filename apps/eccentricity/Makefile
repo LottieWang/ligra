@@ -10,9 +10,9 @@ endif
 ifdef CILK
 # PCC = g++
 PCC = clang++
-PCFLAGS = -std=c++14 -fcilkplus -lcilkrts -O3 -DCILK $(INTT) $(INTE)
-# PCFLAGS = -std=c++14 -fcilkplus -lopencilk -O3 -DCILK $(INTT) $(INTE)
-PLFLAGS = -fcilkplus -lcilkrts
+# PCFLAGS = -std=c++14 -fcilkpls -lcilkrts -O3 -DCILK $(INTT) $(INTE)
+PCFLAGS = -std=c++14 -fopencilk -O3 -DCILK $(INTT) $(INTE)
+# PLFLAGS = -fcilkplus -lcilkrts
 
 else ifdef MKLROOT
 PCC = icpc
